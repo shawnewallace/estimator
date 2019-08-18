@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+
+  estimator.domain.tests:
+    image: Estimator-domain-tests:latest
+    build:
+      context: .
+      dockerfile: Estimator.Domain.Tests/Dockerfile
+
+  estimator.application.tests:
+    image: Estimator-application-tests:latest
+    build:
+      context: .
+      dockerfile: Estimator.Application.Tests/Dockerfile
