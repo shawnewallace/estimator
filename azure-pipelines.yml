@@ -50,7 +50,7 @@ jobs:
         arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
         displayName: 'execute all tests'
 
-    # - script: dotnet publish $(Build.SourcesDirectory)/conways-game-of-life.afn/conways-game-of-life.afn.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/conways-game-of-life.afn
-    #   displayName: 'FUNCTIONS: publish build artifacts'
+    - script: dotnet publish $(Build.SourcesDirectory)/Estimator.Web/Estimator.Web.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/Estimator.Web
+      displayName: 'WEB: publish build artifacts'
 
-    # - task: PublishBuildArtifacts@1 
+    - task: PublishBuildArtifacts@1 
