@@ -6,8 +6,8 @@
 trigger:
 - "*"
 
-pool:
-  vmImage: 'windows-latest'
+# pool:
+#   vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
@@ -17,7 +17,7 @@ variables:
 jobs:
   - job: Web_Api_Functions_Job
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     steps:
     # - script: npm install
     #   displayName: 'WEB: npm install'
@@ -45,7 +45,7 @@ jobs:
         arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
         displayName: 'execute all tests'
 
-    - script: dotnet publish $(Build.SourcesDirectory)/conways-game-of-life.afn/conways-game-of-life.afn.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/conways-game-of-life.afn
-      displayName: 'FUNCTIONS: publish build artifacts'
+    # - script: dotnet publish $(Build.SourcesDirectory)/conways-game-of-life.afn/conways-game-of-life.afn.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/conways-game-of-life.afn
+    #   displayName: 'FUNCTIONS: publish build artifacts'
 
-    - task: PublishBuildArtifacts@1 
+    # - task: PublishBuildArtifacts@1 
