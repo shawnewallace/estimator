@@ -19,6 +19,11 @@ jobs:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: DotNetCoreInstaller@0
+      displayName: 'Install .net core 3.0 (preview)'
+      inputs:
+        version: '3.0.100-rc1-014190'
+
     # - script: npm install
     #   displayName: 'WEB: npm install'
     #   workingDirectory: conways-game-of-life.ng
