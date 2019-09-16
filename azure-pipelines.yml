@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+- "*"
 
 pool:
   vmImage: 'windows-latest'
@@ -14,21 +14,38 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+jobs:
+  - job: Web_Api_Functions_Job
+    pool:
+      vmImage: 'vs2017-win2016'
+    steps:
+    # - script: npm install
+    #   displayName: 'WEB: npm install'
+    #   workingDirectory: conways-game-of-life.ng
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    # - script: npm run builddev -- --output-path $(Build.ArtifactStagingDirectory)/conways-game-of-life.ng/dev
+    #   displayName: 'WEB: build angular app DEV'
+    #   workingDirectory: conways-game-of-life.ng
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    # - script: npm run buildprod -- -c=production --output-path $(Build.ArtifactStagingDirectory)/conways-game-of-life.ng/prod
+    #   displayName: 'WEB: build angular app PROD'
+    #   workingDirectory: conways-game-of-life.ng
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    - script: dotnet restore
+      displayName: 'restore packages'
+
+    - script: dotnet build --configuration $(buildConfiguration)
+      displayName: 'dotnet build $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Tests and Collect Code Coverage'
+      inputs:
+        command: test
+        projects: '**/*tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+        displayName: 'execute all tests'
+
+    - script: dotnet publish $(Build.SourcesDirectory)/conways-game-of-life.afn/conways-game-of-life.afn.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/conways-game-of-life.afn
+      displayName: 'FUNCTIONS: publish build artifacts'
+
+    - task: PublishBuildArtifacts@1 
